@@ -1,13 +1,6 @@
 package server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 
 public class BoardPacket implements Serializable
 {
@@ -32,12 +25,13 @@ public class BoardPacket implements Serializable
 	{
 		byte[] bytes;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutput out = null;
+		DataOutput out = null;
 		try
 		{
-			out = new ObjectOutputStream(bos);
-			out.writeObject(this);
-			out.flush();
+			out = new DataOutputStream(bos);
+			out.writeInt(x);
+			out.writeInt(y);
+			out.writeInt(rgb);
 			bytes = bos.toByteArray();
 		}
 		finally
@@ -51,15 +45,17 @@ public class BoardPacket implements Serializable
 		return bytes;
 	}
 	
-	public static BoardPacket deserializeBoardPacket(byte[] bytes) throws IOException, ClassNotFoundException
+	public static BoardPacket deserializeBoardPacket(byte[] bytes) throws IOException
 	{
-		BoardPacket obj;
+		BoardPacket obj = new BoardPacket(0,0,0);
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		ObjectInput in = null;
+		DataInput in = null;
 		try
 		{
-			in = new ObjectInputStream(bis);
-			obj = (BoardPacket) in.readObject();
+			in = new DataInputStream(bis);
+			obj.x = in.readInt();
+			obj.y = in.readInt();
+			obj.rgb = in.readInt();
 		}
 		finally
 		{
@@ -67,7 +63,7 @@ public class BoardPacket implements Serializable
 			{
 				if (in != null)
 				{
-					in.close();
+					bis.close();
 				}
 			}
 			catch (IOException ex) { }

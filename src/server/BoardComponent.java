@@ -1,8 +1,8 @@
 package server;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import org.w3c.dom.css.RGBColor;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
@@ -52,7 +52,20 @@ public class BoardComponent extends JPanel
 	
 	public void SetPixel(int x, int y, int rgb)
 	{
-		image.setRGB(x, y, rgb);
+		System.out.println(x + ", "+ y + ", " + rgb);
+
+
+		if (x == -1 || y == -1)
+		{
+			Graphics2D g = (Graphics2D) image.getGraphics();
+			g.setPaint ( new Color(rgb) );
+			g.fillRect(0, 0, getWidth(), getHeight());
+		}
+		else if (x > 0 && x < getWidth() && y > 0 && y < getHeight())
+		{
+			image.setRGB(x, y, rgb);
+		}
+
 		repaint();
 	}
 }
