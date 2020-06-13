@@ -1,9 +1,7 @@
 package server;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.net.*;
 import java.util.Vector;
 
 interface OnReceivedEventListener
@@ -19,10 +17,10 @@ public class BoardListener implements Runnable
 
 	private Vector<OnReceivedEventListener> onReceivedListeners;
 
-	public BoardListener(int port) throws SocketException
+	public BoardListener(int port) throws SocketException, UnknownHostException
 	{
 		this.port = port;
-		this.socket = new DatagramSocket(port);
+		this.socket = new DatagramSocket(port, InetAddress.getByName("::1"));
 		onReceivedListeners = new Vector<OnReceivedEventListener>();
 	}
 	
@@ -58,9 +56,8 @@ public class BoardListener implements Runnable
 				System.out.println("Received packet!");
 				BoardPacket bp = BoardPacket.deserializeBoardPacket(request.getData());
 				broadcastOnReceived(bp);
-				
 			}
-			catch (ClassNotFoundException e)
+			catch (IOException e)
 			{
 				System.err.println("Discarded malformed packet: " + e.getMessage());
 			}

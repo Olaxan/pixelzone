@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.Random;
 import java.util.Scanner;
@@ -22,7 +23,7 @@ public class BoardClient
 		
 		DatagramSocket socket = new DatagramSocket();
 		Scanner scan = new Scanner(System.in);
-	    InetAddress address = InetAddress.getByName("localhost");
+	    InetAddress address = InetAddress.getByName("::1");
 		
 		while (true)
 		{
